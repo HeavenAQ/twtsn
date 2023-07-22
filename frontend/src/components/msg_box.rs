@@ -8,12 +8,10 @@ pub struct Props {
 #[function_component]
 pub fn MsgBox(props: &Props) -> Html {
     html! {
-        <div class="relative msg_box">
-            <div class="h-15 text-white bg-gray-500 p-3 pt-4 rounded-lg flex items-center text-center">
-                {props.info}
-            </div>
-            <div class="w-3 h-10 bg-gray-500 absolute top-10"/>
-            <div class="w-10 h-7 bg-zinc-900 absolute top-[52px] rounded-tl-full -left-3"/>
-        </div>
+        <span
+            class="opacity-0 group-hover/info:opacity-100 duration-300 absolute left-1/2 top-0 -translate-x-1/2 bg-gray-500 whitespace-nowrap py-[10px] px-[15px] rounded-lg before:content-[''] before:absolute before:left-1/2 before:top-full before:-translate-x-1/2 before:border-[15px] before:border-t-gray-500 before:border-x-[#0000] before:border-b-[#0000]"
+        >
+            {props.info}
+        </span>
     }
 }

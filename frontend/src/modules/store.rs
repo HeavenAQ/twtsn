@@ -12,13 +12,13 @@ pub struct SharedData {
 }
 
 impl SharedData {
-    pub fn set_loading(loading: bool, dispatch: Dispatch<Self>) {
+    pub fn set_loading(loading: bool, dispatch: &Dispatch<Self>) {
         dispatch.reduce_mut(move |store| {
             store.loading = loading;
         })
     }
 
-    pub fn set_language(lang: Lang, dispatch: Dispatch<Self>) {
+    pub fn set_language(lang: Lang, dispatch: &Dispatch<Self>) {
         dispatch.reduce_mut(move |store| {
             store.language = lang;
         })

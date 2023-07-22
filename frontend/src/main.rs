@@ -1,16 +1,20 @@
+use frontend::components::bulletin::Bulletin;
 use frontend::layout::footer::Footer;
 use frontend::layout::navbar::Navbar;
+use frontend::modules::router::*;
 use yew::prelude::*;
+use yew_router::prelude::*;
 
 #[function_component]
 fn App() -> Html {
     html! {
-        <div>
+        <>
             <Navbar />
-            <main class="h-96 w-11/12 bg-sky-500 mt-10 flex mx-auto">
-            </main>
+                <BrowserRouter>
+                    <Switch<Route> render={switch} />
+                </BrowserRouter>
             <Footer/>
-        </div>
+        </>
     }
 }
 
