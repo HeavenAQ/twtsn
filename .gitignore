@@ -1,5 +1,12 @@
 /target
 **/target
+Cargo.lock
+.gitignore
+
+# Ignore frontend build artifacts
+frontend/target
+frontend/dist/
+frontend/Cargo.lock
 
 
 # Added by cargo
