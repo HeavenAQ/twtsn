@@ -29,12 +29,12 @@ pub enum Route {
 pub fn switch(routes: Route) -> Html {
     match routes {
         Route::Home => html! { <Home/> },
-        Route::Exhibitions => todo!(),
+        Route::Exhibitions => html! {<div>{"Exhibitions"}</div>},
         Route::Exhibition { id } => todo!(),
-        Route::Cases => todo!(),
+        Route::Cases => html! { <div>{"Exhibitions"}</div> },
         Route::Case { id } => todo!(),
-        Route::Services => todo!(),
-        Route::Contact => todo!(),
+        Route::Services => html! { <div>{"Services"}</div> },
+        Route::Contact => html! { <div>{"Contact"}</div> },
         Route::NotFound => html! { <PageNotFound /> },
     }
 }
