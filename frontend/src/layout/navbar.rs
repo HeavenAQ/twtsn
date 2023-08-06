@@ -39,7 +39,7 @@ pub fn Navbar() -> Html {
         <header class="fixed top-0 w-full h-16 z-20 backdrop-blur-md flex justify-center">
             <nav class="w-10/12 h-full flex justify-start items-center">
                 <div class="flex-start flex-auto flex items-center gap-3 font-black tracking-widest text-3xl">
-                    <h1>{ "TWTSN" }</h1>
+                    <h1><a href={"/"}>{ "TWTSN" }</a></h1>
                 </div>
                 <div class="items-center justify-end space-x-6 w-auto hidden lg:inline-flex">
                     {for routes.clone().map(

@@ -1,5 +1,9 @@
+use std::rc::Rc;
+
 use wasm_bindgen::JsCast;
 use web_sys::{Element, EventTarget, HtmlElement};
+
+use super::{lang::Lang, store::SharedData};
 
 pub fn get_child_element(target: &EventTarget, selector: &str) -> Option<Element> {
     let tmp_target = target.clone();

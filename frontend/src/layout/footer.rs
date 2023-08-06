@@ -48,8 +48,8 @@ pub fn Footer() -> Html {
             >
                 <h1 class="text-3xl font-bold">{ "TWTSN" }</h1>
                 <div class="inline-flex w-1/2 justify-center items-center space-x-16">
-                    <Button content={contact}/>
-                    <Button content={subscribe}/>
+                    <Button content={contact} href="/contact#contact_form"/>
+                    <Button content={subscribe} href="some"/>
                 </div>
                 <div class="inline-flex mx-auto w-full justify-center items-center space-x-10">
                     {for icons.iter().enumerate().map(|(i, icon)| {

@@ -2,6 +2,7 @@ use gloo::utils::document;
 use yew::prelude::*;
 use yewdux::prelude::{use_store, Dispatch};
 
+use crate::components::language_switcher::HorizontalLanguageSwitcher;
 use crate::modules::store::SharedData;
 
 pub const DROPDOWN_INACTIVE: &'static str = "before:-translate-y-[10px] after:translate-y-[10px]";
@@ -42,6 +43,7 @@ pub fn DropDownMenu(props: &Props) -> Html {
                         <DropDownItem item_name={route.0.to_owned()} item_route={route.1.to_owned()} />
                     }
                 )}
+                <HorizontalLanguageSwitcher/>
             </div>
         </div>
     }

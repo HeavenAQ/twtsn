@@ -1,7 +1,6 @@
+use crate::pages::contact::Contact;
 use crate::pages::home::Home;
 use crate::pages::not_found_404::PageNotFound;
-use gloo::utils::window;
-use wasm_bindgen::UnwrapThrowExt;
 use yew::prelude::*;
 use yew_router::prelude::*;
 
@@ -34,7 +33,7 @@ pub fn switch(routes: Route) -> Html {
         Route::Cases => html! { <div>{"Exhibitions"}</div> },
         Route::Case { id } => todo!(),
         Route::Services => html! { <div>{"Services"}</div> },
-        Route::Contact => html! { <div>{"Contact"}</div> },
+        Route::Contact => html! { <Contact /> },
         Route::NotFound => html! { <PageNotFound /> },
     }
 }
