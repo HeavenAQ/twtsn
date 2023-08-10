@@ -1,6 +1,7 @@
 use crate::pages::contact::Contact;
 use crate::pages::home::Home;
 use crate::pages::not_found_404::PageNotFound;
+use crate::pages::services::ServicePage;
 use yew::prelude::*;
 use yew_router::prelude::*;
 
@@ -32,7 +33,7 @@ pub fn switch(routes: Route) -> Html {
         Route::Exhibition { id } => todo!(),
         Route::Cases => html! { <div>{"Exhibitions"}</div> },
         Route::Case { id } => todo!(),
-        Route::Services => html! { <div>{"Services"}</div> },
+        Route::Services => html! { <ServicePage /> },
         Route::Contact => html! { <Contact /> },
         Route::NotFound => html! { <PageNotFound /> },
     }
