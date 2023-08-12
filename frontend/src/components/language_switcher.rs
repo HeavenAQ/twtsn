@@ -51,9 +51,9 @@ pub fn HorizontalLanguageSwitcher() -> Html {
     let cur_lang = get_current_lang(&store);
 
     html! {
-        <div class="inline-flex text-slate-100 text-lg h-12 w-full items-center p-2">
+        <div class="inline-flex text-slate-100 md:text-lg text-sm h-12 w-full items-center p-2">
             <div
-                class="inline-flex bg-zinc-700 w-20 h-10 rounded-lg transition-all duration-300 cursor-pointer"
+                class="inline-flex bg-zinc-700 md:w-20 md:h-10 w-16 h-8 rounded-lg transition-all duration-300 cursor-pointer"
                 onclick={switch_lang_onclick(&store, &dispatch)}
             >
                 {for ["中", "日"].iter().map(|lang| html! {

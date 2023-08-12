@@ -57,7 +57,7 @@ pub fn Contact() -> Html {
     html! {
         <>
             <SectionTitle title={question_title}/>
-            <ul class="mx-auto w-4/5">
+            <ul class="mx-auto w-11/12">
                 {for questions.into_iter().enumerate().map(|(i, (question, answer))| {
                     html!{
                         <Accordion nth={i+1} question={question.to_owned()} answer={answer.to_owned()} />

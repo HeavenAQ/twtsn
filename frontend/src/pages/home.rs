@@ -1,14 +1,23 @@
-use crate::components::bulletin::Bulletin;
+use crate::components::news::News;
 use yew::prelude::*;
+
+#[function_component]
+fn Hero() -> Html {
+    html! {
+        <header class="max-h-[85vh] h-auto w-full max-w-screen-2xl mx-auto relative overflow-hidden">
+            <img class="w-full h-auto" src="images/hero.jpg" alt="hero image" />
+        </header>
+
+    }
+}
 
 #[function_component]
 pub fn Home() -> Html {
     html! {
         <>
-            <main class="h-[45vh] w-full max-w-screen-2xl bg-sky-500 mt-[62px] mb-11 flex mx-auto relative">
-            </main>
-            <section>
-                <Bulletin />
+            <Hero />
+            <section class="mt-5 mb-40">
+                <News />
             </section>
         </>
     }

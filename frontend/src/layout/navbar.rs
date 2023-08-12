@@ -36,9 +36,9 @@ pub fn Navbar() -> Html {
         .zip(["/", "/exhibitions", "/cases", "/services", "/contact"]);
 
     html! (
-        <header class="fixed top-0 w-full h-16 z-20 backdrop-blur-md flex justify-center">
-            <nav class="w-10/12 h-full flex justify-start items-center">
-                <div class="flex-start flex-auto flex items-center gap-3 font-black tracking-widest text-3xl">
+        <header class="fixed top-0 w-full md:h-16 h-12 z-20 backdrop-blur-md flex justify-center">
+            <nav class={format!("w-11/12 h-full flex justify-start items-center {}", if is_cur_route("/") { "text-slate-100" } else { "" })}>
+                <div class="flex-start flex-auto flex items-center gap-3 font-semibold tracking-widest lg:text-3xl md:text-2xl text-xl">
                     <h1><a href={"/"}>{ "TWTSN" }</a></h1>
                 </div>
                 <div class="items-center justify-end space-x-6 w-auto hidden lg:inline-flex">
