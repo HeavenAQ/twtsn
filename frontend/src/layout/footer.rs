@@ -1,72 +1,67 @@
-use std::rc::Rc;
+use crate::app::{Lang, Store};
+use crate::components::button::Button;
+use crate::components::msg_box::MsgBox;
+use leptos::*;
+use leptos_icons::*;
 
-use crate::modules::lang::Lang;
-use crate::{components::button::Button, components::msg_box::MsgBox, modules::store::SharedData};
-use yew::prelude::*;
-use yew_icons::{Icon, IconId};
-use yewdux::prelude::use_store;
-
-#[derive(Properties, Clone, PartialEq)]
-pub struct Props {
-    pub lang: Lang,
-}
-
-fn icon_html(icon_id: IconId) -> Html {
-    html! {
-        <Icon icon_id={icon_id} class="hover:text-gray-400 duration-100 cursor-pointer" />
-    }
-}
-
-#[function_component]
-pub fn Footer() -> Html {
-    let (store, _) = use_store::<SharedData>();
-    let icons = Rc::from([
-        ("www.facebook.com", icon_html(IconId::BootstrapFacebook)),
+#[component]
+pub fn Footer(cx: Scope) -> impl IntoView {
+    let store = use_context::<ReadSignal<Store>>(cx).unwrap();
+    let icons = vec![
+        (
+            "www.facebook.com",
+            view! {cx, <Icon icon=Icon::from(SiIcon::SiFacebook) /> },
+        ),
         (
             "072-284-9617",
-            icon_html(IconId::FontAwesomeSolidSquarePhone),
+            view! {cx, <Icon icon=Icon::from(FaIcon::FaSquarePhoneSolid) />},
         ),
         (
             "〒593-8316大阪府堺市西区山田4-2056-1",
-            icon_html(IconId::FontAwesomeSolidLocationDot),
+            view! {cx, <Icon icon=Icon::from(FaIcon::FaLocationDotSolid) />},
         ),
         (
             "info@twtsn.co.jp",
-            icon_html(IconId::FontAwesomeSolidEnvelope),
+            view! {cx, <Icon icon=Icon::from(FaIcon::FaEnvelopeSolid) />},
         ),
-    ]);
+    ];
 
-    let (contact, subscribe) = match store.language {
-        Lang::JP => ("お問い合わせ", "サブスク"),
-        Lang::CHN => ("聯絡我們", "訂閱電子報"),
-    };
+    view! { cx,
+      <footer class="flex flex-col gap-6 items-center justify-center bg-zinc-900 text-white text-center mx-auto p-6 z-30 w-full h-72 left-1/2">
+        <h1 class="text-3xl font-bold">{"TWTSN"}</h1>
+        <div class="inline-flex w-1/2 justify-center items-center space-x-16">
+          {move || match store.with(|store| store.language) {
+              Lang::JP => {
+                  view! { cx,
+                    <Button content="お問い合わせ" href="/contact#contact_form"/>
+                    <Button content="サブスク" href="some"/>
+                  }
+              }
+              Lang::CHN => {
 
-    html! {
-        <>
-            <footer
-                class="flex flex-col gap-6 items-center justify-center bg-zinc-900 text-white text-center mx-auto p-6 z-30 w-full h-72 left-1/2"
-            >
-                <h1 class="text-3xl font-bold">{ "TWTSN" }</h1>
-                <div class="inline-flex w-1/2 justify-center items-center space-x-16">
-                    <Button content={contact} href="/contact#contact_form"/>
-                    <Button content={subscribe} href="some"/>
-                </div>
-                <div class="inline-flex mx-auto w-full justify-center items-center space-x-10">
-                    {for icons.iter().enumerate().map(|(i, icon)| {
-                        html!{
-                            <div
-                                key={i}
-                                class="flex flex-col items-center justify-start"
-                            >
-                                <div class="relative w-auto h-auto group/info cursor-pointer">
-                                    <MsgBox info={icon.0}/>
-                                    <div class="mt-16">{icon.1.clone()}</div>
-                                </div>
-                            </div>
-                        }
-                    })}
-                </div>
-            </footer>
-        </>
+                  view! { cx,
+                    <Button content="聯絡我們" href="/contact#contact_form"/>
+                    <Button content="訂閱電子報" href="some"/>
+                  }
+              }
+          }}
+
+        </div>
+        <div class="inline-flex mx-auto w-full justify-center items-center space-x-10">
+          {icons
+              .into_iter()
+              .map(|icon| {
+                  view! { cx,
+                    <div class="flex flex-col items-center justify-start">
+                      <div class="relative w-auto h-auto group/info cursor-pointer">
+                        <MsgBox info=icon.0/>
+                        <div class="mt-16 text-2xl">{icon.1}</div>
+                      </div>
+                    </div>
+                  }
+              })
+              .collect_view(cx)}
+        </div>
+      </footer>
     }
 }

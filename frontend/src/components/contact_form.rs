@@ -1,58 +1,47 @@
-use std::rc::Rc;
-
-use yew::prelude::*;
-use yew_icons::{Icon, IconId};
-use yewdux::prelude::use_store;
-
 use crate::{
-    modules::{lang::Lang, store::SharedData},
+    app::{Lang, Store},
     pages::services::SERVICES,
 };
+use leptos::*;
+use leptos_icons::*;
 
-fn icon_html(icon_id: IconId) -> Html {
-    html! {
-        <Icon icon_id={icon_id} />
-    }
-}
-
-#[function_component]
-fn ContactInfo() -> Html {
-    let icons = Rc::from([
+#[component]
+fn ContactInfo(cx: Scope) -> impl IntoView {
+    let icons = vec![
         (
             "072-284-9617",
-            icon_html(IconId::FontAwesomeSolidSquarePhone),
-        ),
-        (
-            "info@twtsn.co.jp",
-            icon_html(IconId::FontAwesomeSolidEnvelope),
+            view! {cx, <Icon icon=Icon::from(FaIcon::FaSquarePhoneSolid) />},
         ),
         (
             "〒593-8316大阪府堺市西区山田4-2056-1",
-            icon_html(IconId::FontAwesomeSolidLocationDot),
+            view! {cx, <Icon icon=Icon::from(FaIcon::FaLocationDotSolid) />},
         ),
-    ]);
-    html! {
-    <>
+        (
+            "info@twtsn.co.jp",
+            view! {cx, <Icon icon=Icon::from(FaIcon::FaEnvelopeSolid) />},
+        ),
+    ];
+
+    view! {cx,
         <div class="flex flex-col gap-9">
-            {for icons.iter().enumerate().map(|(i, icon)| {
-            html!{
-                <div key={i} class="inline-grid grid-cols-6 gap-4 w-full h-auto">
-                <div class="bg-white text-zinc-800 h-10 w-10 rounded-full flex items-center justify-center col-span-1">{icon.1.clone()}</div>
-                    <div class="leading-10 col-span-5">
-                    <p class="text-md">{&icon.0}</p>
+            {icons.iter().enumerate().map(|(i, icon)| {
+                view!{cx,
+                    <div key={i} class="inline-grid grid-cols-6 gap-4 w-full h-auto">
+                    <div class="bg-white text-zinc-800 h-10 w-10 rounded-full flex items-center justify-center col-span-1">{icon.1.clone()}</div>
+                        <div class="leading-10 col-span-5">
+                        <p class="text-md">{icon.0}</p>
+                        </div>
                     </div>
-                </div>
-            }
-            })}
+                }
+            }).collect_view(cx)}
         </div>
-    </>
     }
 }
 
-#[function_component]
-fn EmailForm() -> Html {
-    let (store, _) = use_store::<SharedData>();
-    let input_fields = match store.language {
+#[component]
+fn EmailForm(cx: Scope) -> impl IntoView {
+    let store = use_context::<ReadSignal<Store>>(cx).unwrap();
+    let input_fields = move || match store.with(|store| store.language) {
         Lang::JP => [
             "名前",
             "会社名",
@@ -73,19 +62,19 @@ fn EmailForm() -> Html {
         ],
     };
 
-    html! {
+    view! {cx,
         <>
-            <form class="w-full max-w-lg">
+            <form class="w-full">
                 <div class="flex flex-wrap -mx-3 mb-6">
                     <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                         <label class="block tracking-wide text-slate-100 text-sm font-bold mb-2" for="grid-first-name">
-                            {input_fields[0]}
+                            {move || input_fields()[0]}
                         </label>
                         <input class="appearance-none block w-full border rounded py-3 px-4 mb-3 leading-tight " id="grid-first-name" type="text" placeholder="Jane Chou" />
                     </div>
                     <div class="w-full md:w-1/2 px-3">
                         <label class="block tracking-wide text-slate-100 text-sm font-bold mb-2" for="grid-last-name">
-                            {input_fields[1]}
+                            {move || input_fields()[1]}
                         </label>
                         <input class="appearance-none block w-full border border-gray-200 rounded py-3 px-4 leading-tight" id="grid-last-name" type="text" placeholder="Company"/>
                     </div>
@@ -93,13 +82,13 @@ fn EmailForm() -> Html {
                 <div class="flex flex-wrap -mx-3 mb-6">
                     <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                         <label class="block tracking-wide text-slate-100 text-sm font-bold mb-2" for="phone">
-                            {input_fields[2]}
+                            {move || input_fields()[2]}
                         </label>
                         <input class="appearance-none block w-full border rounded py-3 px-4 mb-3 leading-tight " id="phone" type="tel" name="phone" placeholder="xxx-xxx-xxx" />
                     </div>
                     <div class="w-full md:w-1/2 px-3">
                         <label class="block tracking-wide text-slate-100 text-sm font-bold mb-2" for="grid-last-name">
-                            {input_fields[3]}
+                            {move || input_fields()[3]}
                         </label>
                         <input class="appearance-none block w-full border border-gray-200 rounded py-3 px-4 leading-tight" id="grid-last-name" type="email" placeholder="example@example.com"/>
                     </div>
@@ -107,32 +96,31 @@ fn EmailForm() -> Html {
                 <div class="flex flex-wrap items-end -mx-3 mb-2">
                     <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
                         <label class="block tracking-wide text-slate-100 text-sm font-bold mb-2" for="grid-state">
-                            {input_fields[4]}
+                            {move || input_fields()[4]}
                         </label>
                         <div class="relative">
                             <select
                                 class="block appearance-none w-full border border-gray-200 py-3 px-4 pr-8 rounded leading-tight"
                                 id="grid-state"
                             >
-                                {for SERVICES.get_service(store.language).iter().map(|service| {
-                                html!{
-                                    <option>{service}</option>
-                                }
-                                })}
+                                {move || SERVICES.get_service(store().language).iter().map(|service| {
+                                    view!{cx,
+                                        <option>{service}</option>
+                                    }
+                                }).collect_view(cx)}
                             </select>
                             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
                             </div>
                         </div>
                     </div>
                     <div class="w-full md:w-2/3 px-3">
-                        <input class="appearance-none block w-full border border-gray-200 rounded py-3 px-4 leading-tight" id="grid-last-name" type="email" placeholder={input_fields[5]}/>
+                        <input class="appearance-none block w-full border border-gray-200 rounded py-3 px-4 leading-tight" id="grid-last-name" type="email" placeholder=move || input_fields()[5]/>
                     </div>
                 </div>
 
                 <div class="flex flex-wrap -mx-3 mb-6">
                     <div class="w-full px-3 mb-6 md:mb-0 mt-5">
-                        <textarea class="appearance-none block w-full border rounded py-3 px-4 mb-3 leading-tight" id="email-content" type="textarea" name="email-content" placeholder={input_fields[6]} rows="10"/>
+                        <textarea class="appearance-none block w-full border rounded py-3 px-4 mb-3 leading-tight" id="email-content" type="textarea" name="email-content" placeholder=move || input_fields()[6] rows="10"/>
                     </div>
                 </div>
             </form>
@@ -140,9 +128,9 @@ fn EmailForm() -> Html {
     }
 }
 
-#[function_component]
-pub fn ContactForm() -> Html {
-    html! {
+#[component]
+pub fn ContactForm(cx: Scope) -> impl IntoView {
+    view! {cx,
     <div class="lg:h-[75vh] w-11/12 lg:grid lg:grid-rows-2 lg:grid-cols-2 mx-auto lg:rounded-xl lg:my-24 my-14 lg:gap-2 lg:shadow-lg bg-transparent">
         <div class="lg:row-span-2 lg:col-span-1 row-span-3 bg-zinc-800 flex p-12 justify-center rounded-xl mb-12 lg:mb-0">
             <EmailForm />

@@ -1,13 +1,4 @@
-use gloo::{console::log, utils::document_element};
-use web_sys::Element;
-use yew::prelude::*;
-
-#[derive(Properties, Clone, PartialEq)]
-pub struct Props {
-    pub question: String,
-    pub answer: String,
-    pub nth: usize,
-}
+use leptos::*;
 
 const LABEL_UNCHECKED: &'static str = "before:content-['+']";
 const LABEL_CHECKED: &'static str = "before:content-['-']";
@@ -15,59 +6,53 @@ const CONTENT_UNCHECKED: &'static str = "max-h-0";
 const CONTENT_CHECKED: &'static str = "max-h-[400px]";
 
 fn toggle_accordion(id: usize) {
-    let accordion_selector = format!("body > div > ul > li:nth-child({})", id);
-    let accordion = match get_element_by_selector(&document_element(), accordion_selector.as_str())
-    {
-        Some(element) => element,
-        None => return,
+    let selector = format!("body > main > ul > li:nth-child({})", id);
+    let accordion = match document().query_selector(selector.as_str()) {
+        Ok(Some(accordion)) => accordion,
+        _ => return,
     };
-    let mut label = match get_element_by_selector(&accordion, "label") {
-        Some(element) => element,
-        None => return,
+    let label = match accordion.query_selector("label") {
+        Ok(Some(label)) => label,
+        _ => return,
     };
-    let mut content = match get_element_by_selector(&accordion, "div") {
-        Some(element) => element,
-        None => return,
+    let content = match accordion.query_selector("div") {
+        Ok(Some(label)) => label,
+        _ => return,
     };
-    log!("label: {:?}", &label);
-    log!("content: {:?}", &content);
-    toggle_class(&mut label, LABEL_CHECKED, LABEL_UNCHECKED);
-    toggle_class(&mut content, CONTENT_CHECKED, CONTENT_UNCHECKED);
+    let label_classname = toggle_class(label.class_name(), LABEL_CHECKED, LABEL_UNCHECKED);
+    let content_classname = toggle_class(content.class_name(), CONTENT_CHECKED, CONTENT_UNCHECKED);
+    label.set_class_name(label_classname.as_str());
+    content.set_class_name(content_classname.as_str());
 }
 
-fn get_element_by_selector(root: &Element, selector: &str) -> Option<Element> {
-    match root.query_selector(selector) {
-        Ok(element) => match element {
-            Some(element) => Some(element),
-            None => return None,
-        },
-        Err(_) => return None,
-    }
-}
-
-fn toggle_class(e: &mut Element, checked: &str, unchecked: &str) {
-    let classname = e.class_name();
-    let new_classname = if classname.contains(checked) {
-        classname.replace(checked, unchecked)
+fn toggle_class(old_classname: String, checked: &str, unchecked: &str) -> String {
+    let new_classname = if old_classname.contains(checked) {
+        old_classname.replace(checked, unchecked)
     } else {
-        classname.replace(unchecked, checked)
+        old_classname.replace(unchecked, checked)
     };
-    e.set_class_name(new_classname.as_str());
+    new_classname
 }
 
-#[function_component]
-pub fn Accordion(props: &Props) -> Html {
-    let id = props.nth;
-    html! {
+#[component]
+pub fn Accordion(
+    cx: Scope,
+    question: &'static str,
+    answer: &'static str,
+    nth: usize,
+) -> impl IntoView {
+    view! {cx,
         <li class="list-none w-full md:p-8 rounded-2xl shadow-lg p-5">
             <label
-                class={format!("flex items-center p-3 cursor-pointer text-lg font-medium before:mr-3 before:text-2xl before:font-semibold {}", LABEL_UNCHECKED)}
-                onclick={Callback::from(move |_| toggle_accordion(id))}
+                class="flex items-center p-3 cursor-pointer text-lg font-medium before:mr-3 before:text-2xl before:font-semibold before:content-['+']"
+                on:click=move |_| toggle_accordion(nth)
             >
-                {&props.question}
+                {question}
             </label>
-            <div class={format!("px-[10px] leading-[26px] overflow-hidden {} transition-[max-height] duration-300", CONTENT_UNCHECKED)}>
-                {&props.answer}
+            <div
+                class="px-[10px] leading-[26px] overflow-hidden transition-[max-height] duration-300 max-h-0"
+            >
+                {answer}
             </div>
         </li>
     }
