@@ -1,5 +1,5 @@
 use crate::app::{Lang, Store};
-use crate::components::dropdown_menu::{switch_dropdown, DropDownMenu};
+use crate::components::dropdown_menu::DropDownMenu;
 use crate::components::language_switcher::LanguageSwitcher;
 use leptos::*;
 use leptos_router::use_location;
@@ -22,14 +22,6 @@ pub fn Navbar(cx: Scope, set_store: WriteSignal<Store>) -> impl IntoView {
         "お問い合わせ",
     ];
     let (routes, set_routes) = create_signal(cx, chn_routes);
-
-    create_effect(cx, move |prev_path| {
-        let cur_location = use_location(cx).pathname.get();
-        if Some(cur_location.clone()) != prev_path {
-            switch_dropdown(set_store, false);
-        }
-        cur_location
-    });
 
     view! { cx,
       <header class="fixed top-0 w-full md:h-16 h-12 z-20 backdrop-blur-md flex justify-center">

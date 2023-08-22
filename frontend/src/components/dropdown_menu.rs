@@ -88,7 +88,10 @@ fn DropDownItem(
     view! {cx,
         <a
             href=route_path
-            on:click=move |_| set_store.update(|store| store.dropdown_active = false)
+            on:click=move |_| {
+                set_store.update(|store| store.dropdown_active = false);
+                switch_dropdown(set_store, false);
+            }
         >
             <div
                 class="h-12 w-full flex items-center rounded-xl p-2 transition-all duration-150 hover:bg-gray-400 text-slate-100 md:text-lg sm:text-sm"
