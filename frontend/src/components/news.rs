@@ -6,13 +6,12 @@ use leptos::*;
 use leptos_icons::*;
 use reqwest::{Response, StatusCode};
 
-type HeadlineInfo = (String, String);
-
-#[component]
-pub fn News(cx: Scope) -> impl IntoView {
-    let headline_infos = create_resource(cx, || (), |_| get_headlines());
-    let (headline_num, set_headline_num) = create_signal(cx, 0_usize);
-    let (pos, set_pos) = create_signal(cx, 0_usize);
+fn auto_scroll(
+    cx: Scope,
+    headline_num: ReadSignal<usize>,
+    pos: ReadSignal<usize>,
+    set_pos: WriteSignal<usize>,
+) {
     create_effect(cx, move |_| {
         set_interval(
             move || {
@@ -25,7 +24,17 @@ pub fn News(cx: Scope) -> impl IntoView {
             Duration::from_secs(5),
         );
     });
+}
 
+type HeadlineInfo = (String, String);
+
+#[component]
+pub fn News(cx: Scope) -> impl IntoView {
+    let headline_infos = create_resource(cx, || (), |_| get_headlines());
+    let (headline_num, set_headline_num) = create_signal(cx, 0_usize);
+    let (pos, set_pos) = create_signal(cx, 0_usize);
+
+    auto_scroll(cx, headline_num, pos, set_pos);
     view! {cx,
         <div class="w-11/12 lg:h-12 md:h-10 h-8 mx-auto rounded-md relative overflow-hidden">
             <div class="h-full w-full">
@@ -47,7 +56,7 @@ pub fn News(cx: Scope) -> impl IntoView {
                             headlines.iter().map(|(headline, url)| {
                                 view! {cx,
                                     <div class="h-full w-full relative">
-                                        <h3 class="font-semibold lg:text-xl md:text-lg text-md absolute top-1/2 -translate-y-1/2 hover:text-gray-400 duration-150 truncate text-ellipsis">
+                                        <h3 class="font-semibold lg:text-xl md:text-lg text-md absolute top-1/2 -translate-y-1/2 hover:text-gray-400 duration-150 truncate overflow-ellipsis">
                                             <a href=url>{headline}...</a>
                                         </h3>
                                     </div>

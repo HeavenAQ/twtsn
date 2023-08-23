@@ -131,7 +131,7 @@ fn EmailForm(cx: Scope) -> impl IntoView {
 #[component]
 pub fn ContactForm(cx: Scope) -> impl IntoView {
     view! {cx,
-    <div class="lg:h-[75vh] w-11/12 lg:grid lg:grid-rows-2 lg:grid-cols-2 mx-auto lg:rounded-xl lg:my-24 my-14 lg:gap-2 lg:shadow-lg bg-transparent">
+    <div class="max-h-[700px] lg:h-[75vh] w-11/12 lg:grid lg:grid-rows-2 lg:grid-cols-2 mx-auto lg:rounded-xl lg:my-24 my-14 lg:gap-2 lg:shadow-lg bg-transparent">
         <div class="lg:row-span-2 lg:col-span-1 row-span-3 bg-zinc-800 flex p-12 justify-center rounded-xl mb-12 lg:mb-0">
             <EmailForm />
         </div>

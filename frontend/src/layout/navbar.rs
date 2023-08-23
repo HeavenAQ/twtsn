@@ -1,13 +1,8 @@
 use crate::app::{Lang, Store};
 use crate::components::dropdown_menu::DropDownMenu;
 use crate::components::language_switcher::LanguageSwitcher;
+use crate::modules::utils::is_cur_route;
 use leptos::*;
-use leptos_router::use_location;
-
-fn is_cur_route(cx: Scope, route: &str) -> bool {
-    let cur_location = use_location(cx);
-    cur_location.pathname.get() == route
-}
 
 #[component]
 pub fn Navbar(cx: Scope, set_store: WriteSignal<Store>) -> impl IntoView {

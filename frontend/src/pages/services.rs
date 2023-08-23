@@ -8,10 +8,10 @@ pub struct Services {
 }
 
 #[derive(Clone, PartialEq)]
-struct ServiceInfo {
-    title: String,
-    description: String,
-    images: Vec<String>,
+pub struct ServiceInfo {
+    pub title: String,
+    pub description: String,
+    pub images: Vec<String>,
 }
 
 impl Services {
@@ -36,7 +36,7 @@ impl Services {
         target.iter().map(|s| s.to_string()).collect()
     }
 
-    fn get_service_info_list(&self, lang: Lang) -> Vec<ServiceInfo> {
+    pub fn get_service_info_list(&self, lang: Lang) -> Vec<ServiceInfo> {
         let service_titles = self.get_service(lang);
         let service_descriptions = match lang {
             Lang::CHN => vec![
@@ -54,10 +54,10 @@ impl Services {
             ],
         };
         let service_images = vec![
-            vec!["images/default.jpg".to_string()],
-            vec!["images/default.jpg".to_string()],
-            vec!["images/default.jpg".to_string()],
-            vec!["images/default.jpg".to_string()],
+            vec!["/assets/images/default.jpg".to_string()],
+            vec!["/assets/images/default.jpg".to_string()],
+            vec!["/assets/images/default.jpg".to_string()],
+            vec!["/assets/images/default.jpg".to_string()],
         ];
         service_titles
             .iter()
@@ -108,12 +108,14 @@ pub fn ServicePage(cx: Scope) -> impl IntoView {
     let store = use_context::<ReadSignal<Store>>(cx).unwrap();
 
     view! {cx,
-        <div class="flex flex-col space-y-28 mt-40 mb-24 w-4/5 mx-auto">
+        <div class="flex flex-col space-y-28 mb-24 w-4/5 mx-auto">
             { move || {
                 let services = SERVICES.get_service_info_list(store().language);
                 services.iter().take(4).enumerate().map(|(i, service)| {
                     view! {cx,
-                        <ServiceCard id=i service={service.clone()}/>
+                        <section id=&service.title class="h-[100vh] flex items-center justify-center">
+                            <ServiceCard id=i service={service.clone()}/>
+                        </section>
                     }
                 }).collect_view(cx)
             }}
