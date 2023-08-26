@@ -1,6 +1,7 @@
 use crate::app::{Lang, Store};
 use crate::components::button::Button;
 use crate::components::carousel::ExhibitionCarousel;
+use crate::components::email_bar::EmailBar;
 use crate::components::news::News;
 use crate::pages::services::{ServiceInfo, SERVICES};
 use leptos::*;
@@ -51,7 +52,7 @@ fn Hero(cx: Scope) -> impl IntoView {
 #[component]
 fn ServiceCard(cx: Scope, service: ServiceInfo) -> impl IntoView {
     view! {cx,
-        <div class="grid flex-grow h-72 card bg-base-300 rounded-box place-items-center hover:opacity-60 duration-300 cursor-pointer overflow-hidden relative">
+        <div class="grid flex-grow card bg-base-300 rounded-box place-items-center hover:opacity-60 duration-300 cursor-pointer overflow-hidden relative">
             <a href=format!("/services#{}", service.title) class="w-full h-full">
                 <h3 class="absolute font-bold text-xl left-4 top-4 z-10 text-white">{service.title}</h3>
                 <img src=&service.images[0] alt="service image" class="w-full h-full object-cover"/>
@@ -101,20 +102,25 @@ pub fn HomePage(cx: Scope) -> impl IntoView {
     view! { cx,
         <div class="w-full">
             <Hero/>
-            <section class="lg:h-[15vh] h-[10vh] flex items-center justify-center">
+            <section class="h-[10vh] flex items-center justify-center">
                 <News/>
             </section>
-            <section class="w-11/12 h-[70vh] justify-center items-center mx-auto lg:mb-40 md:mb-32 mb-20">
+            <section class="w-11/12 h-[40vh] justify-center items-center mx-auto lg:mb-40 md:mb-32 mb-20">
                 <ExhibitionCarousel/>
             </section>
-            <section class="lg:h-[100vh] lg:mb-40 md:mb-32 mb-20 w-11/12 mx-auto text-center">
-                <h1 class="lg:text-4xl text-3xl font-bold uppercase lg:mb-20 md:mb-14 mb-10">{move || match store.with(|store| store.language) {
+            <section class="lg:mb-40 md:mb-32 mb-20 w-11/12 mx-auto text-center">
+                <h1 class="lg:text-4xl text-3xl font-bold uppercase lg:mb-20 md:mb-14 mb-10 tracking-widest">{move || match store.with(|store| store.language) {
                     Lang::JP => "サービス",
                     Lang::CHN => "服務",
                 }}</h1>
                 <ServiceSection/>
             </section>
-            <section class="h-[100vh] w-11/12">
+            <section class="h-[40vh] relative text-center mx-auto bg-[#242424] pt-32">
+                <h1 class="lg:text-4xl text-3xl font-bold uppercase lg:mb-20 md:mb-14 mb-10 text-slate-100 tracking-widest">{move || match store.with(|store| store.language) {
+                    Lang::CHN => "訂閱電子報",
+                    Lang::JP => "ニュースレター",
+                }}</h1>
+                <EmailBar />
             </section>
         </div>
     }
