@@ -1,8 +1,9 @@
+use crate::app::HomePageState;
 use crate::app::{Lang, Store};
 use crate::components::button::Button;
 use crate::components::carousel::ExhibitionCarousel;
-use crate::components::email_bar::EmailBar;
 use crate::components::news::News;
+use crate::components::news_letter::NewsLetter;
 use crate::pages::services::{ServiceInfo, SERVICES};
 use leptos::*;
 
@@ -108,19 +109,15 @@ pub fn HomePage(cx: Scope) -> impl IntoView {
             <section class="w-11/12 h-[40vh] justify-center items-center mx-auto lg:mb-40 md:mb-32 mb-20">
                 <ExhibitionCarousel/>
             </section>
-            <section class="lg:mb-40 md:mb-32 mb-20 w-11/12 mx-auto text-center">
+            <section class="lg:mb-40 md:mb-32 mb-20 w-10/12 mx-auto text-center">
                 <h1 class="lg:text-4xl text-3xl font-bold uppercase lg:mb-20 md:mb-14 mb-10 tracking-widest">{move || match store.with(|store| store.language) {
                     Lang::JP => "サービス",
                     Lang::CHN => "服務",
                 }}</h1>
                 <ServiceSection/>
             </section>
-            <section class="h-[40vh] relative text-center mx-auto bg-[#242424] pt-32">
-                <h1 class="lg:text-4xl text-3xl font-bold uppercase lg:mb-20 md:mb-14 mb-10 text-slate-100 tracking-widest">{move || match store.with(|store| store.language) {
-                    Lang::CHN => "訂閱電子報",
-                    Lang::JP => "ニュースレター",
-                }}</h1>
-                <EmailBar />
+            <section class="bg-zinc-800 h-80">
+                <NewsLetter />
             </section>
         </div>
     }

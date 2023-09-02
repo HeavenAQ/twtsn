@@ -1,6 +1,8 @@
 use leptos::{ev::MouseEvent, *};
 use std::time::Duration;
 
+use crate::app::HomePageState;
+
 struct CarouselSlide<'a> {
     image: &'a str,
     title: &'a str,
@@ -14,7 +16,7 @@ fn CarouselCard<'a>(cx: Scope, slide: &'a CarouselSlide<'static>) -> impl IntoVi
             <img class="h-full w-full object-cover" src=slide.image/>
             <div class="absolute text-center bottom-14 text-white w-1/2 left-1/2 -translate-x-1/2">
                 <h3 class="font-semibold lg:text-xl md:text-lg text-md">{slide.title}</h3>
-                <p>{slide.description}</p>
+                <p class="lg:block hidden">{slide.description}</p>
             </div>
         </div>
     }
@@ -84,20 +86,16 @@ fn CarouselIdxWrapper(
     }
 }
 
-fn auto_slide(
-    cx: Scope,
-    slides_len: usize,
-    active_idx: ReadSignal<usize>,
-    set_active_idx: WriteSignal<usize>,
-) {
+fn auto_slide(cx: Scope, slides_len: usize) {
     create_effect(cx, move |_| {
+        let home_state = use_context::<ReadSignal<HomePageState>>(cx).unwrap();
         set_interval(
             move || {
-                if active_idx() == slides_len - 1 {
-                    set_active_idx.update(|idx| *idx = 0);
+                if (home_state().cur_carousel)() == slides_len - 1 {
+                    home_state().set_cur_carousel.update(|idx| *idx = 0);
                     return;
                 }
-                set_active_idx.update(|idx| *idx = *idx + 1);
+                home_state().set_cur_carousel.update(|idx| *idx = *idx + 1);
             },
             Duration::from_secs(17),
         )
@@ -130,12 +128,7 @@ pub fn ExhibitionCarousel(cx: Scope) -> impl IntoView {
         },
     ];
 
-    auto_slide(
-        cx,
-        carousel_slides.len(),
-        active_idx.clone(),
-        set_active_idx.clone(),
-    );
+    auto_slide(cx, carousel_slides.len());
     view! { cx,
         <div class="w-full h-full overflow-hidden relative shadow-lg rounded-xl">
             <div

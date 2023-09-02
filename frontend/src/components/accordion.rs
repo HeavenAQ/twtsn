@@ -6,7 +6,7 @@ const CONTENT_UNCHECKED: &'static str = "max-h-0";
 const CONTENT_CHECKED: &'static str = "max-h-[400px]";
 
 fn toggle_accordion(id: usize) {
-    let selector = format!("body > main > ul > li:nth-child({})", id);
+    let selector = format!("body > ul > li:nth-child({})", id);
     let accordion = match document().query_selector(selector.as_str()) {
         Ok(Some(accordion)) => accordion,
         _ => return,
@@ -21,6 +21,8 @@ fn toggle_accordion(id: usize) {
     };
     let label_classname = toggle_class(label.class_name(), LABEL_CHECKED, LABEL_UNCHECKED);
     let content_classname = toggle_class(content.class_name(), CONTENT_CHECKED, CONTENT_UNCHECKED);
+    log!("{}", label_classname.as_str());
+    log!("{}", content_classname.as_str());
     label.set_class_name(label_classname.as_str());
     content.set_class_name(content_classname.as_str());
 }

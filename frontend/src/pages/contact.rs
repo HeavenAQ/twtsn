@@ -26,7 +26,7 @@ where
 {
     view! {cx,
         <div id=id class="h-[5vh] w-full max-w-screen-2xl mt-24 text-center mx-auto">
-            <h1 class="font-black text-4xl text-zinc-800">
+            <h1 class="font-bold text-3xl text-zinc-800">
                 {title}
             </h1>
         </div>
