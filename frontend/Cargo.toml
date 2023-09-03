@@ -28,6 +28,9 @@ leptos_icons = {version = "0.0.15", features = [
     "BiBellRingSolid",
 ]}
 reqwest = { version = "0.11.18", features = ["json"] }
+gray_matter = "0.2.6"
+pulldown-cmark = "0.9.3"
+chrono = "0.4.28"
 
 [features]
 csr = ["leptos/csr", "leptos_meta/csr", "leptos_router/csr"]

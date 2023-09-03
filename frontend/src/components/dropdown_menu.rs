@@ -23,7 +23,7 @@ pub fn switch_dropdown(set_store: WriteSignal<Store>, on: bool) {
 #[component]
 pub fn DropDownMenu<I>(
     cx: Scope,
-    routes: ReadSignal<[&'static str; 5]>,
+    routes: ReadSignal<[&'static str; 4]>,
     paths: I,
     set_store: WriteSignal<Store>,
 ) -> impl IntoView
@@ -37,7 +37,7 @@ where
         <div class="relative block lg:hidden">
             <MenuButton set_store=set_store/>
             <div
-                class="absolute md:w-[300px] w-[250px] h-auto top-14 left-0 -translate-x-[85%] bg-zinc-800 rounded-xl md:p-4 p-2 overflow-hidden duration-150"
+                class="absolute md:w-[300px] w-[250px] h-auto top-14 left-0 -translate-x-[85%] bg-zinc-800 rounded-xl md:p-4 p-2 overflow-hidden duration-150 shadow-xl transition-all"
                 class=("opacity-100", is_dropdown_active)
                 class=("hidden", is_dropdown_active)
             >

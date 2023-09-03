@@ -1,10 +1,4 @@
-use std::collections::HashMap;
-
-use crate::components::button::Button;
-use crate::{
-    app::{Lang, Store},
-    pages::services::SERVICES,
-};
+use crate::{app::Store, modules::utils::render_jp_or_chn, pages::services::SERVICES};
 use leptos::ev::SubmitEvent;
 use leptos::html::{Input, Select, Textarea};
 use leptos::*;
@@ -14,26 +8,26 @@ fn open_client_email_client(mailto_url: &str) {
     window().open_with_url(mailto_url).unwrap();
 }
 
-fn store_user_email(
-    name: String,
-    company: String,
-    phone: String,
-    email: String,
-    service_type: String,
-    title: String,
-    body: String,
-) {
-    let data = HashMap::from([
-        ("name", name),
-        ("company", company),
-        ("phone", phone),
-        ("email", email),
-        ("service_type", service_type),
-        ("title", title),
-        ("body", body),
-    ]);
-    let client = reqwest::Client::new();
-}
+//fn store_user_email(
+//name: String,
+//company: String,
+//phone: String,
+//email: String,
+//service_type: String,
+//title: String,
+//body: String,
+//) {
+//let data = HashMap::from([
+//("name", name),
+//("company", company),
+//("phone", phone),
+//("email", email),
+//("service_type", service_type),
+//("title", title),
+//("body", body),
+//]);
+//let client = reqwest::Client::new();
+//}
 
 #[component]
 fn ContactInfo(cx: Scope) -> impl IntoView {
@@ -75,25 +69,28 @@ fn ContactInfo(cx: Scope) -> impl IntoView {
 #[component]
 fn EmailForm(cx: Scope) -> impl IntoView {
     let store = use_context::<ReadSignal<Store>>(cx).unwrap();
-    let input_fields = move || match store.with(|store| store.language) {
-        Lang::JP => [
-            "名前",
-            "会社名",
-            "電話番号",
-            "メール",
-            "信件內容",
-            "件名",
-            "メッセージ",
-        ],
-        Lang::CHN => [
-            "姓名",
-            "公司名",
-            "電話號碼",
-            "電子郵件",
-            "信件內容",
-            "主旨",
-            "內文",
-        ],
+    let input_fields = move || {
+        render_jp_or_chn(
+            cx,
+            [
+                "名前",
+                "会社名",
+                "電話番号",
+                "メール",
+                "信件內容",
+                "件名",
+                "メッセージ",
+            ],
+            [
+                "姓名",
+                "公司名",
+                "電話號碼",
+                "電子郵件",
+                "信件內容",
+                "主旨",
+                "內文",
+            ],
+        )
     };
 
     let name: NodeRef<Input> = create_node_ref(cx);
@@ -116,7 +113,6 @@ fn EmailForm(cx: Scope) -> impl IntoView {
         let raw_param = format!("subject={service_type}-{title}&body=Name: {name}%0AEmail: {email}%0APhone: {phone}%0ACompany: {company}%0AContent:%0A{body}");
         let mailto_url = format!("mailto:info@twtsn.co.jp?{}", raw_param);
         open_client_email_client(mailto_url.as_str());
-        store_user_email(name, company, phone, email, service_type, title, body);
     };
 
     view! {cx,
@@ -181,19 +177,10 @@ fn EmailForm(cx: Scope) -> impl IntoView {
                         <textarea class="appearance-none block w-full border rounded py-3 px-4 mb-3 leading-tight" id="email-content" type="textarea" node_ref=body placeholder=move || input_fields()[6] rows="10" required/>
                     </div>
                     <div class="w-full h-auto flex justify-center items-end text-white">
-                        {move || match store.with(|store| store.language) {
-                            Lang::JP => {
-                                view! { cx,
-                                    <button href="" class="btn btn-neutral btn-md btn-wide glass">送信</button>
-                                }
-                            }
-                            Lang::CHN => {
-
-                                view! { cx,
-                                    <button href="" class="btn btn-neutral btn-md btn-wide glass">送出</button>
-                                }
-                            }
-                        }}
+                        {move || render_jp_or_chn(cx,
+                            view! { cx, <button href="" class="btn btn-neutral btn-md btn-wide glass">送信</button> },
+                            view! { cx, <button href="" class="btn btn-neutral btn-md btn-wide glass">送出</button> }
+                        )}
                     </div>
                 </div>
             </form>

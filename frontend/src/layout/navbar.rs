@@ -1,21 +1,14 @@
-use crate::app::{Lang, Store};
+use crate::app::Store;
 use crate::components::dropdown_menu::DropDownMenu;
 use crate::components::language_switcher::LanguageSwitcher;
-use crate::modules::utils::is_cur_route;
+use crate::modules::utils::{is_cur_route, render_jp_or_chn};
 use leptos::*;
 
 #[component]
 pub fn Navbar(cx: Scope, set_store: WriteSignal<Store>) -> impl IntoView {
-    let store = use_context::<ReadSignal<Store>>(cx).unwrap();
-    let paths = ["/", "/exhibitions", "/cases", "/services", "/contact"];
-    let chn_routes = ["首頁", "近期展覽", "案例分享", "服務", "聯絡我們"];
-    let jp_routes = [
-        "ホーム",
-        "最近の展覧会",
-        "ケースシェア",
-        "サービス",
-        "お問い合わせ",
-    ];
+    let paths = ["/", "/cases/all", "/services", "/contact"];
+    let chn_routes = ["首頁", "案例分享", "服務", "聯絡我們"];
+    let jp_routes = ["ホーム", "ケースシェア", "サービス", "お問い合わせ"];
     let (routes, set_routes) = create_signal(cx, chn_routes);
 
     view! { cx,
@@ -33,10 +26,7 @@ pub fn Navbar(cx: Scope, set_store: WriteSignal<Store>) -> impl IntoView {
           </div>
           <div class="items-center justify-end space-x-6 w-auto hidden lg:inline-flex">
             {move || {
-                set_routes.update(|routes| *routes = match store.with(|s| s.language) {
-                    Lang::CHN => chn_routes,
-                    Lang::JP => jp_routes,
-                });
+                set_routes.update(|routes| *routes = render_jp_or_chn(cx, jp_routes, chn_routes));
                 routes().iter().zip(paths).map(|(name, path)| {
                     view! { cx, <NavItem route_name=name route_path=path/> }
                 }).collect_view(cx)

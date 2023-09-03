@@ -1,12 +1,11 @@
-use crate::app::{Lang, Store};
 use crate::components::button::Button;
 use crate::components::msg_box::MsgBox;
+use crate::modules::utils::render_jp_or_chn;
 use leptos::*;
 use leptos_icons::*;
 
 #[component]
 pub fn Footer(cx: Scope) -> impl IntoView {
-    let store = use_context::<ReadSignal<Store>>(cx).unwrap();
     let icons = vec![
         (
             "www.facebook.com",
@@ -30,21 +29,16 @@ pub fn Footer(cx: Scope) -> impl IntoView {
       <footer class="flex flex-col gap-6 items-center justify-center bg-zinc-900 text-white text-center mx-auto p-6 z-30 w-full h-72 left-1/2 overflow-hidden">
         <h1 class="text-3xl font-bold">{"TWTSN"}</h1>
         <div class="inline-flex w-1/2 justify-center items-center space-x-16">
-          {move || match store.with(|store| store.language) {
-              Lang::JP => {
-                  view! { cx,
-                    <Button content="お問い合わせ" href="/contact#contact_form"/>
-                    <Button content="サブスク" href="some"/>
-                  }
-              }
-              Lang::CHN => {
-
-                  view! { cx,
-                    <Button content="聯絡我們" href="/contact#contact_form"/>
-                    <Button content="訂閱電子報" href="some"/>
-                  }
-              }
-          }}
+          {move || render_jp_or_chn(cx,
+              view! { cx,
+                <Button content="お問い合わせ" href="/contact#contact_form"/>
+                <Button content="サブスク" href="/#news-letter"/>
+              },
+                            view! { cx,
+                <Button content="聯絡我們" href="/contact#contact_form"/>
+                <Button content="訂閱電子報" href="/#news-letter"/>
+              })
+          }
 
         </div>
         <div class="inline-flex mx-auto w-full justify-center items-center space-x-10">

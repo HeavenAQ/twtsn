@@ -1,6 +1,6 @@
-use crate::app::{Lang, Store};
 use crate::components::accordion::Accordion;
 use crate::components::contact_form::ContactForm;
+use crate::modules::utils::render_jp_or_chn;
 use leptos::*;
 
 const CHN_QUESTION_LIST: [(&'static str, &'static str); 5] = [
@@ -35,34 +35,24 @@ where
 
 #[component]
 pub fn Contact(cx: Scope) -> impl IntoView {
-    let store = use_context::<ReadSignal<Store>>(cx).unwrap();
     view! {cx,
         <>
             <SectionTitle
-                title=move || match store.with(|s| s.language) {
-                    Lang::CHN => "常見問題",
-                    Lang::JP => "よくある問題",
-                }
+                title=move || render_jp_or_chn(cx, "よくある質問", "常見問題")
             />
             <ul class="mx-auto w-11/12">
                 {move || {
-                    let questions = match store.with(|s| s.language) {
-                        Lang::CHN => &CHN_QUESTION_LIST,
-                        Lang::JP => &JP_QUESTION_LIST,
-                    };
+                    let questions = render_jp_or_chn(cx, JP_QUESTION_LIST, CHN_QUESTION_LIST);
                     questions.into_iter().enumerate().map(|(i, (question, answer))| {
                         view!{cx,
-                            <Accordion nth={i+1} question={*question} answer={*answer} />
+                            <Accordion nth={i+1} question={question} answer={answer} />
                         }
                     }).collect_view(cx)
                 }}
             </ul>
             <SectionTitle
                 id="contact_form"
-                title=move || match store.with(|s| s.language) {
-                    Lang::CHN => "聯絡我們",
-                    Lang::JP => "お問い合わせ",
-                }
+                title=move || render_jp_or_chn(cx, "お問い合わせ", "聯繫我們")
             />
             <ContactForm />
         </>

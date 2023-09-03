@@ -1,15 +1,14 @@
-use crate::app::HomePageState;
-use crate::app::{Lang, Store};
+use crate::app::Store;
 use crate::components::button::Button;
 use crate::components::carousel::ExhibitionCarousel;
 use crate::components::news::News;
 use crate::components::news_letter::NewsLetter;
+use crate::modules::utils::render_jp_or_chn;
 use crate::pages::services::{ServiceInfo, SERVICES};
 use leptos::*;
 
 #[component]
 fn Hero(cx: Scope) -> impl IntoView {
-    let store = use_context::<ReadSignal<Store>>(cx).unwrap();
     view! { cx,
         <div
             class="hero min-h-screen bg-base-200"
@@ -26,23 +25,10 @@ fn Hero(cx: Scope) -> impl IntoView {
                     </p>
 
                     <div class="inline-flex w-1/2">
-                        {move || match store.with(|store| store.language) {
-                            Lang::JP => {
-                                view! { cx,
-                                    <Button
-                                        content="お問い合わせ"
-                                        href="/contact#contact_form"
-                                    />
-                                }
-                            }
-                            Lang::CHN => {
-
-                                view! { cx,
-                                    <Button content="聯絡我們" href="/contact#contact_form"/>
-                                }
-                            }
-                        }}
-
+                        {move || render_jp_or_chn(cx,
+                            view! { cx, <Button content="お問い合わせ" href="/contact#contact_form" /> },
+                            view! { cx, <Button content="聯絡我們" href="/contact#contact_form"/> }
+                        )}
                     </div>
                 </div>
             </div>
@@ -99,7 +85,6 @@ fn ServiceSection(cx: Scope) -> impl IntoView {
 
 #[component]
 pub fn HomePage(cx: Scope) -> impl IntoView {
-    let store = use_context::<ReadSignal<Store>>(cx).unwrap();
     view! { cx,
         <div class="w-full">
             <Hero/>
@@ -110,13 +95,12 @@ pub fn HomePage(cx: Scope) -> impl IntoView {
                 <ExhibitionCarousel/>
             </section>
             <section class="lg:mb-40 md:mb-32 mb-20 w-10/12 mx-auto text-center">
-                <h1 class="lg:text-4xl text-3xl font-bold uppercase lg:mb-20 md:mb-14 mb-10 tracking-widest">{move || match store.with(|store| store.language) {
-                    Lang::JP => "サービス",
-                    Lang::CHN => "服務",
-                }}</h1>
+                <h1 class="lg:text-4xl text-3xl font-bold uppercase lg:mb-20 md:mb-14 mb-10 tracking-widest">
+                    {move || render_jp_or_chn(cx, "サービス", "服務" )}
+                </h1>
                 <ServiceSection/>
             </section>
-            <section class="bg-zinc-800 h-80">
+            <section class="bg-zinc-800 h-80" id="news-letter">
                 <NewsLetter />
             </section>
         </div>

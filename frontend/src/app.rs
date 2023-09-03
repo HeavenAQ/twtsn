@@ -1,9 +1,12 @@
-use crate::layout::footer::Footer;
+use crate::api::cases::CaseType;
+use crate::components::case::{Case, RenderCase};
 use crate::layout::navbar::Navbar;
+use crate::pages::cases::case_page::CasePage;
 use crate::pages::contact::Contact;
 use crate::pages::home::HomePage;
 use crate::pages::not_found::NotFound;
 use crate::pages::services::ServicePage;
+use crate::{api::cases::get_cases, layout::footer::Footer};
 use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
@@ -62,11 +65,18 @@ pub fn App(cx: Scope) -> impl IntoView {
     // Provides context that manages stylesheets, titles, meta tags, etc.
     provide_meta_context(cx);
 
+    // Global states: home page and language
     let (store, set_store) = create_signal(cx, Store::default());
     let (home_state, set_home_state) = create_signal(cx, HomePageState::new(cx));
+
+    // Markdown file parsing for cases sharing
+    let cases = create_resource(cx, || (), |_| async move { get_cases().await });
+
+    // Provide context for global state
     provide_context(cx, store);
     provide_context(cx, home_state);
     provide_context(cx, set_home_state);
+    provide_context(cx, cases);
 
     view! { cx,
       <Stylesheet id="leptos" href="/pkg/tailwind.css"/>
@@ -78,6 +88,22 @@ pub fn App(cx: Scope) -> impl IntoView {
             <Route path="" view=HomePage/>
             <Route path="/contact" view=Contact/>
             <Route path="/services" view=ServicePage/>
+
+            <Route path="/cases" view=CasePage>
+                <Route path="/exhibitions" view=|cx| view!{cx, <Case case_type=CaseType::Exhibition /> } />
+                <Route path="/translations" view=|cx| view!{cx, <Case case_type=CaseType::Translation /> } />
+                <Route path="/instruments" view=|cx| view!{cx, <Case case_type=CaseType::Instrument /> } />
+                <Route path="/venues" view=|cx| view!{cx, <Case case_type=CaseType::Venue /> } />
+                <Route path="/others" view=|cx| view!{cx, <Case case_type=CaseType::Other /> } />
+                <Route path="/all" view=|cx| view!{cx, <Case case_type=CaseType::All /> } />
+            </Route>
+
+            <Route path="/cases/exhibitions/:case"  view=|cx| view! { cx, <RenderCase case_type=CaseType::Exhibition/> }/>
+            <Route path="/cases/translations/:case" view=|cx| view! { cx, <RenderCase case_type=CaseType::Translation/> }/>
+            <Route path="/cases/instruments/:case" view=|cx| view! { cx, <RenderCase case_type=CaseType::Instrument/> }/>
+            <Route path="/cases/venues/:case" view=|cx| view! { cx, <RenderCase case_type=CaseType::Venue/> }/>
+            <Route path="/cases/others/:case" view=|cx| view! { cx, <RenderCase case_type=CaseType::Other/> }/>
+            <Route path="/cases/all/:case" view=|cx| view! { cx, <RenderCase case_type=CaseType::All/> }/>
             <Route path="/*any" view=NotFound/>
           </Routes>
           <Footer/>
