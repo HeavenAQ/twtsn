@@ -8,6 +8,9 @@ frontend/target
 frontend/dist/
 frontend/Cargo.lock
 frontend/node_modules
+frontend/.DS_Store
+backend
+modules
 
 
 # Added by cargo

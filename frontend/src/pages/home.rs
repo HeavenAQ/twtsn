@@ -1,7 +1,6 @@
 use crate::app::Store;
 use crate::components::button::Button;
 use crate::components::carousel::ExhibitionCarousel;
-use crate::components::news::News;
 use crate::components::news_letter::NewsLetter;
 use crate::modules::utils::render_jp_or_chn;
 use crate::pages::services::{ServiceInfo, SERVICES};
@@ -89,7 +88,6 @@ pub fn HomePage(cx: Scope) -> impl IntoView {
         <div class="w-full">
             <Hero/>
             <section class="h-[10vh] flex items-center justify-center">
-                <News/>
             </section>
             <section class="w-11/12 h-[40vh] justify-center items-center mx-auto lg:mb-40 md:mb-32 mb-20">
                 <ExhibitionCarousel/>

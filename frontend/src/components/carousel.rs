@@ -97,14 +97,14 @@ fn auto_slide(cx: Scope, slides_len: usize) {
                 }
                 home_state().set_cur_carousel.update(|idx| *idx = *idx + 1);
             },
-            Duration::from_secs(17),
+            Duration::from_secs(5),
         )
     });
 }
 
 #[component]
 pub fn ExhibitionCarousel(cx: Scope) -> impl IntoView {
-    let (active_idx, set_active_idx) = create_signal(cx, 0_usize);
+    let home_state = use_context::<ReadSignal<HomePageState>>(cx).unwrap();
     let carousel_slides = vec![
         CarouselSlide {
             image: "/assets/images/hero.jpg",
@@ -133,10 +133,14 @@ pub fn ExhibitionCarousel(cx: Scope) -> impl IntoView {
         <div class="w-full h-full overflow-hidden relative shadow-lg rounded-xl">
             <div
                 class="h-full overflow-hidden duration-700"
-                style:margin-left=move || format!("-{}%", active_idx() * 100)
+                style=("margin-left", move || format!("-{}%", (home_state().cur_carousel)() * 100))
                 style:width=format!("{}%", carousel_slides.len() * 100)
             >
-                <CarouselIdxWrapper slides_len=carousel_slides.len() active_idx set_active_idx>
+                <CarouselIdxWrapper
+                    slides_len=carousel_slides.len()
+                    active_idx=home_state().cur_carousel
+                    set_active_idx=home_state().set_cur_carousel
+                >
                     {carousel_slides
                         .iter()
                         .map(|slide| {
